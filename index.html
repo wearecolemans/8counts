@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <style>
@@ -30,7 +29,6 @@
     button:hover{transform:translateY(-1px)}
     input,textarea{outline:none}
     input:focus,textarea:focus{border-color:var(--color-primary)!important;box-shadow:0 0 0 3px rgba(107,77,87,0.12)}
-    .hidden{display:none!important}
     .app-shell{display:grid;grid-template-columns:272px 1fr;min-height:100vh}
     .sidebar{background:rgba(255,255,255,0.78);backdrop-filter:blur(14px);border-right:1px solid var(--color-border);padding:var(--space-8) var(--space-6);display:flex;flex-direction:column;gap:var(--space-6);position:sticky;top:0;height:100vh;overflow-y:auto}
     .logo{display:flex;align-items:center;gap:var(--space-3);color:var(--color-primary);font-weight:700;font-size:var(--text-lg)}
@@ -73,7 +71,7 @@
     .video-form{display:flex;gap:var(--space-3);flex-wrap:wrap}.video-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--space-5)}
     .video-card{overflow:hidden;border-radius:24px;border:1px solid var(--color-border);background:rgba(255,255,255,0.96);box-shadow:var(--shadow-sm)}
     .video-frame{width:100%;aspect-ratio:16/9;border:none;background:#000}.video-info{padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-2)}
-    input[type="text"],input[type="url"],input[type="email"],input[type="password"]{min-height:44px;padding:.8rem .95rem;border:1px solid var(--color-border);border-radius:16px;background:white;color:var(--color-text)}
+    input[type="text"],input[type="url"]{min-height:44px;padding:.8rem .95rem;border:1px solid var(--color-border);border-radius:16px;background:white;color:var(--color-text)}
     .map-toolbar{display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center}.map-wrap{display:grid;grid-template-columns:minmax(0,1fr) 248px;gap:var(--space-5);align-items:start}
     .formation-stage{position:relative;width:100%;aspect-ratio:16/8;border-radius:28px;border:2px solid rgba(107,77,87,0.2);overflow:hidden;background:rgba(255,255,255,0.95);box-shadow:inset 0 0 0 1px rgba(255,255,255,0.7),var(--shadow-sm);cursor:crosshair;touch-action:none}
     .formation-grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(9,1fr)}.formation-grid span{border-right:1px solid rgba(107,77,87,0.16);position:relative}.formation-grid span:last-child{border-right:none}
@@ -87,12 +85,6 @@
     .map-item.active{background:white;border-color:rgba(107,77,87,0.22)}
     .empty-state{padding:var(--space-8);border-radius:24px;border:1px dashed rgba(107,77,87,0.24);text-align:center;background:rgba(255,255,255,0.5);color:var(--color-muted)}
     .view{display:none}.view.active{display:block}.stack{display:flex;flex-direction:column;gap:var(--space-4)}.inline-actions{display:flex;flex-wrap:wrap;gap:var(--space-3)}
-    .auth-wrap{min-height:100vh;display:grid;place-items:center;padding:var(--space-6)}
-    .auth-card{width:min(520px,100%);background:rgba(255,255,255,0.92);border:1px solid var(--color-border);border-radius:28px;padding:var(--space-8);box-shadow:var(--shadow-md);display:flex;flex-direction:column;gap:var(--space-5)}
-    .auth-card h1{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);line-height:1.05}
-    .auth-form{display:flex;flex-direction:column;gap:var(--space-3)}
-    .banner{padding:1rem 1.1rem;border-radius:18px;background:#fff5f3;border:1px solid rgba(192,57,43,.15);color:#8a3b31;font-size:var(--text-sm)}
-    .success{background:#f2fbf2;border-color:rgba(67,122,34,.18);color:#32571b}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:var(--space-4);flex-wrap:wrap}
     .export-root{position:absolute;left:-9999px;top:0;width:1400px;background:white;padding:18px}.export-page{width:1400px;height:850px;display:grid;grid-template-columns:1fr 1fr;gap:16px;background:white}.export-sheet{border:2px solid #13070c;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;overflow:hidden}.export-sheet h3{font-size:22px}.export-stack{display:flex;flex-direction:column;gap:8px;flex:1}.export-row{display:grid;grid-template-columns:44px 1fr;gap:8px;border:1px solid rgba(19,7,12,0.16);border-radius:10px;padding:8px;min-height:86px}.export-badge{width:38px;height:38px;border-radius:12px;background:#f4e7e4;color:#6b4d57;display:grid;place-items:center;font-weight:700;font-size:14px}
     @media(max-width:1080px){.app-shell{grid-template-columns:1fr}.sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--color-border)}.map-wrap{grid-template-columns:1fr}}
@@ -101,35 +93,16 @@
   </style>
 </head>
 <body>
-  <section id="authScreen" class="auth-wrap">
-    <div class="auth-card">
-      <div>
-        <div class="label">8Count Test App</div>
-        <h1>Sign in and save routines for your team.</h1>
-        <p class="muted">This summer test version uses Supabase for email login and cloud saving.</p>
-      </div>
-      <div id="authMessage" class="banner hidden"></div>
-      <div class="auth-form">
-        <input id="emailInput" type="email" placeholder="Email address" />
-        <input id="passwordInput" type="password" placeholder="Password" />
-        <button id="signUpBtn" class="btn btn-secondary">Create account</button>
-        <button id="signInBtn" class="btn btn-primary">Sign in</button>
-      </div>
-      <p class="muted">First login creates your personal test workspace. Team-based workspaces can be added later without rebuilding the app structure.</p>
-    </div>
-  </section>
-
-  <div id="appScreen" class="hidden">
+  <div id="appScreen">
     <div class="app-shell">
       <aside class="sidebar">
         <div class="logo"><div class="logo-mark">8</div><div><div>8Count</div><div class="routine-meta">Cheer routine planner</div></div></div>
         <section class="card">
           <div class="topbar">
             <div>
-              <div class="label">Workspace</div>
-              <p id="userEmail" class="muted"></p>
+              <div class="label">Summer test mode</div>
+              <p class="muted">No login required for this version.</p>
             </div>
-            <button id="signOutBtn" class="delete-btn">Sign out</button>
           </div>
         </section>
         <section class="card">
@@ -140,16 +113,17 @@
           <div class="routine-list" id="routineList"></div>
         </section>
         <section class="card">
-          <div class="label">Cloud status</div>
+          <div class="label">Save status</div>
           <p id="saveStatus" class="muted">Ready.</p>
+          <p class="note">This test version saves on this device and browser.</p>
         </section>
       </aside>
       <main class="main">
         <section class="hero">
           <div>
             <div class="label">8Count · Test Version</div>
-            <h1>Save count sheets, formation maps, and video in one place.</h1>
-            <p>This version is wired to Supabase so your routines stay available across sessions.</p>
+            <h1>Open the app and start building routines right away.</h1>
+            <p>This simplified summer version skips login so your team can test the routine builder immediately.</p>
           </div>
           <div class="hero-stats">
             <div class="stat"><strong id="routineCountStat">0</strong><span class="note">Routines</span></div>
@@ -179,10 +153,8 @@
   <div class="export-root" id="exportRoot" aria-hidden="true"></div>
 
 <script>
-const SUPABASE_URL = 'https://mkaiuqdxzlzoxazcwtwo.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rYWl1cWR4emx6b3hhemN3dHdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE5NjE1NzcsImV4cCI6MjA5NzUzNzU3N30.T2SMKaBGzlHiVtEK1ztkjiAOP8__JPzu5qISvj0SkaU';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const state = { activeRoutineId:null, activeTab:'sheets', activeSheetId:null, activeMapId:null, selectedMarkerId:null, routines:[], user:null, saving:false };
+const STORAGE_KEY = 'eightCountSummerTestWorkspace';
+const state = { activeRoutineId:null, activeTab:'sheets', activeSheetId:null, activeMapId:null, selectedMarkerId:null, routines:[] };
 const $ = id => document.getElementById(id);
 const navTabs = () => Array.from(document.querySelectorAll('.nav-tab'));
 const views = { sheets:$('sheetsView'), videos:$('videosView'), maps:$('mapsView') };
@@ -196,18 +168,9 @@ function createRoutine(name){ return {id:uid(), name, sheets:[createSheet('Sheet
 function getRoutine(){ return state.routines.find(r=>r.id===state.activeRoutineId)||null; }
 function getSheet(){ const r=getRoutine(); return r?(r.sheets.find(s=>s.id===state.activeSheetId)||r.sheets[0]||null):null; }
 function getMap(){ const r=getRoutine(); return r?(r.maps.find(m=>m.id===state.activeMapId)||r.maps[0]||null):null; }
-function setStatus(msg,isError=false){ const el=$('saveStatus'); if(el){ el.textContent=msg; el.style.color=isError?'#8a3b31':'var(--color-muted)'; }}
-function authMessage(msg, ok=false){ const el=$('authMessage'); el.textContent=msg; el.classList.remove('hidden','success'); if(ok) el.classList.add('success'); }
-function clearAuthMessage(){ $('authMessage').classList.add('hidden'); }
+function setStatus(msg,isError=false){ const el=$('saveStatus'); el.textContent=msg; el.style.color=isError?'#8a3b31':'var(--color-muted)'; }
 function extractEmbed(url){ try{ const u=new URL(url); if(u.hostname.includes('youtube.com')){const id=u.searchParams.get('v'); return id?`https://www.youtube.com/embed/${id}`:null;} if(u.hostname.includes('youtu.be')){const id=u.pathname.split('/').filter(Boolean)[0]; return id?`https://www.youtube.com/embed/${id}`:null;} if(u.hostname.includes('vimeo.com')){const id=u.pathname.split('/').filter(Boolean)[0]; return id?`https://player.vimeo.com/video/${id}`:null;} }catch(e){} return null; }
-
-async function ensureSchema(){
-  const sql = `create table if not exists public.team_workspaces (user_id uuid primary key, data jsonb not null default '[]'::jsonb, updated_at timestamptz not null default now());`;
-  const { error } = await supabase.rpc('exec_sql', { sql_query: sql }).catch(()=>({error:true}));
-  return !error;
-}
-
-async function initStorage(){
+function seedWorkspace(){
   const sample = createRoutine('Friday Night Pep Rally');
   sample.sheets[0].counts[0].note='Load in'; sample.sheets[0].counts[1].note='Dip'; sample.sheets[0].counts[2].note='Extension pop'; sample.sheets[0].counts[4].note='Pull lib'; sample.sheets[0].counts[6].note='Prep'; sample.sheets[0].counts[7].note='Full down';
   const s2=createSheet('Sheet 2'); s2.counts[0].note='Travel ripple'; s2.counts[3].note='Hit pose'; sample.sheets.push(s2);
@@ -215,52 +178,49 @@ async function initStorage(){
   sample.maps[0].markers=[{id:uid(),number:1,x:18,y:48},{id:uid(),number:2,x:28,y:56},{id:uid(),number:3,x:38,y:56},{id:uid(),number:4,x:48,y:48},{id:uid(),number:5,x:58,y:56}];
   state.routines=[sample]; state.activeRoutineId=sample.id; state.activeSheetId=sample.sheets[0].id; state.activeMapId=sample.maps[0].id;
 }
-
-async function loadWorkspace(){
-  setStatus('Loading workspace...');
-  const { data, error } = await supabase.from('team_workspaces').select('data').eq('user_id', state.user.id).maybeSingle();
-  if(error && !String(error.message).includes('does not exist')){ await initStorage(); setStatus('Using temporary local demo until database table is created.', true); render(); return; }
-  if(data?.data?.length){ state.routines = data.data; }
-  else { await initStorage(); await saveWorkspace(true); }
-  const first = state.routines[0];
-  state.activeRoutineId = first?.id || null;
-  state.activeSheetId = first?.sheets?.[0]?.id || null;
-  state.activeMapId = first?.maps?.[0]?.id || null;
-  setStatus('All changes saved.');
+function loadWorkspace(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed.routines) && parsed.routines.length){
+        state.routines = parsed.routines;
+        state.activeRoutineId = parsed.activeRoutineId || parsed.routines[0]?.id || null;
+        state.activeSheetId = parsed.activeSheetId || parsed.routines[0]?.sheets?.[0]?.id || null;
+        state.activeMapId = parsed.activeMapId || parsed.routines[0]?.maps?.[0]?.id || null;
+        setStatus('Saved workspace loaded.');
+        render();
+        return;
+      }
+    }
+  } catch (e) {
+    setStatus('Could not load saved workspace.', true);
+  }
+  seedWorkspace();
+  saveWorkspace(true);
   render();
 }
-
 let saveTimer = null;
-function queueSave(){ clearTimeout(saveTimer); setStatus('Saving...'); saveTimer = setTimeout(()=>saveWorkspace(), 500); }
-async function saveWorkspace(initial=false){
-  if(!state.user) return;
-  const payload = { user_id: state.user.id, data: state.routines, updated_at: new Date().toISOString() };
-  const { error } = await supabase.from('team_workspaces').upsert(payload);
-  if(error){ setStatus('Save failed. Table setup may still be needed.', true); return; }
-  if(!initial) setStatus('All changes saved.');
+function queueSave(){ clearTimeout(saveTimer); setStatus('Saving...'); saveTimer = setTimeout(()=>saveWorkspace(), 250); }
+function saveWorkspace(initial=false){
+  try {
+    const payload = { routines: state.routines, activeRoutineId: state.activeRoutineId, activeSheetId: state.activeSheetId, activeMapId: state.activeMapId };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+    setStatus(initial ? 'Starter workspace ready.' : 'All changes saved on this device.');
+  } catch (e) {
+    setStatus('Save failed on this browser.', true);
+  }
 }
-
-function showApp(){ $('authScreen').classList.add('hidden'); $('appScreen').classList.remove('hidden'); $('userEmail').textContent = state.user?.email || ''; }
-function showAuth(){ $('appScreen').classList.add('hidden'); $('authScreen').classList.remove('hidden'); }
-
-function renderSidebar(){
-  const list = $('routineList'); list.innerHTML='';
-  state.routines.forEach(r=>{ const btn=document.createElement('button'); btn.className='routine-item'+(r.id===state.activeRoutineId?' active':''); btn.innerHTML=`<div><strong>${esc(r.name)}</strong><div class="routine-meta">${r.sheets.length} sheets · ${r.maps.length} maps</div></div><span aria-hidden="true">→</span>`; btn.addEventListener('click',()=>{ state.activeRoutineId=r.id; state.activeSheetId=r.sheets[0]?.id||null; state.activeMapId=r.maps[0]?.id||null; render(); }); list.appendChild(btn); });
-}
+function renderSidebar(){ const list = $('routineList'); list.innerHTML=''; state.routines.forEach(r=>{ const btn=document.createElement('button'); btn.className='routine-item'+(r.id===state.activeRoutineId?' active':''); btn.innerHTML=`<div><strong>${esc(r.name)}</strong><div class="routine-meta">${r.sheets.length} sheets · ${r.maps.length} maps</div></div><span aria-hidden="true">→</span>`; btn.addEventListener('click',()=>{ state.activeRoutineId=r.id; state.activeSheetId=r.sheets[0]?.id||null; state.activeMapId=r.maps[0]?.id||null; render(); queueSave(); }); list.appendChild(btn); }); }
 function renderStats(){ $('routineCountStat').textContent=state.routines.length; $('sheetCountStat').textContent=state.routines.reduce((s,r)=>s+r.sheets.length,0); $('mapCountStat').textContent=state.routines.reduce((s,r)=>s+r.maps.length,0); }
 function renderNavTabs(){ navTabs().forEach(t=>t.classList.toggle('active',t.dataset.tab===state.activeTab)); Object.entries(views).forEach(([k,v])=>v.classList.toggle('active',k===state.activeTab)); }
-function renderSheets(){ const routine=getRoutine(), sheet=getSheet(), sheetTabs=$('sheetTabs'), sheetCanvas=$('sheetCanvas'); sheetTabs.innerHTML=''; if(routine){ routine.sheets.forEach(s=>{ const btn=document.createElement('button'); btn.className='sheet-tab'+(s.id===state.activeSheetId?' active':''); btn.textContent=s.name; btn.addEventListener('click',()=>{ state.activeSheetId=s.id; renderSheets(); }); sheetTabs.appendChild(btn); }); } sheetCanvas.innerHTML=''; if(!routine||!sheet){ sheetCanvas.innerHTML='<div class="empty-state">Create a routine to start building your count sheets.</div>'; return; } const panel=document.createElement('article'); panel.className='sheet-panel'; panel.innerHTML=`<div class="sheet-header"><input class="sheet-title" type="text" value="${esc(sheet.name)}" data-sheet-title /><button class="delete-btn" data-delete-sheet="${sheet.id}">Delete sheet</button></div>`; const stack=document.createElement('div'); stack.className='count-stack'; sheet.counts.forEach((count,idx)=>{ const row=document.createElement('div'); row.className='count-row'; row.innerHTML=`<div class="count-badge">${count.index}</div><textarea data-count-index="${idx}" placeholder="What happens on count ${count.index}?">${esc(count.note)}</textarea>`; stack.appendChild(row); }); panel.appendChild(stack); sheetCanvas.appendChild(panel); panel.querySelector('[data-sheet-title]').addEventListener('input',e=>{ sheet.name=e.target.value.trim()||sheet.name; renderSheets(); queueSave(); }); panel.querySelector('[data-delete-sheet]').addEventListener('click',()=>{ if(routine.sheets.length===1) return alert('Each routine needs at least one count sheet.'); routine.sheets=routine.sheets.filter(s=>s.id!==sheet.id); state.activeSheetId=routine.sheets[0].id; render(); queueSave(); }); panel.querySelectorAll('textarea').forEach(ta=>ta.addEventListener('input',e=>{ sheet.counts[Number(e.target.dataset.countIndex)].note=e.target.value; queueSave(); })); }
+function renderSheets(){ const routine=getRoutine(), sheet=getSheet(), sheetTabs=$('sheetTabs'), sheetCanvas=$('sheetCanvas'); sheetTabs.innerHTML=''; if(routine){ routine.sheets.forEach(s=>{ const btn=document.createElement('button'); btn.className='sheet-tab'+(s.id===state.activeSheetId?' active':''); btn.textContent=s.name; btn.addEventListener('click',()=>{ state.activeSheetId=s.id; renderSheets(); queueSave(); }); sheetTabs.appendChild(btn); }); } sheetCanvas.innerHTML=''; if(!routine||!sheet){ sheetCanvas.innerHTML='<div class="empty-state">Create a routine to start building your count sheets.</div>'; return; } const panel=document.createElement('article'); panel.className='sheet-panel'; panel.innerHTML=`<div class="sheet-header"><input class="sheet-title" type="text" value="${esc(sheet.name)}" data-sheet-title /><button class="delete-btn" data-delete-sheet="${sheet.id}">Delete sheet</button></div>`; const stack=document.createElement('div'); stack.className='count-stack'; sheet.counts.forEach((count,idx)=>{ const row=document.createElement('div'); row.className='count-row'; row.innerHTML=`<div class="count-badge">${count.index}</div><textarea data-count-index="${idx}" placeholder="What happens on count ${count.index}?">${esc(count.note)}</textarea>`; stack.appendChild(row); }); panel.appendChild(stack); sheetCanvas.appendChild(panel); panel.querySelector('[data-sheet-title]').addEventListener('input',e=>{ sheet.name=e.target.value.trim()||sheet.name; renderSheets(); queueSave(); }); panel.querySelector('[data-delete-sheet]').addEventListener('click',()=>{ if(routine.sheets.length===1) return alert('Each routine needs at least one count sheet.'); routine.sheets=routine.sheets.filter(s=>s.id!==sheet.id); state.activeSheetId=routine.sheets[0].id; render(); queueSave(); }); panel.querySelectorAll('textarea').forEach(ta=>ta.addEventListener('input',e=>{ sheet.counts[Number(e.target.dataset.countIndex)].note=e.target.value; queueSave(); })); }
 function renderVideos(){ const routine=getRoutine(), videoList=$('videoList'); videoList.innerHTML=''; if(!routine){ videoList.innerHTML='<div class="empty-state">Create a routine before adding videos.</div>'; return; } if(!routine.videos.length){ videoList.innerHTML='<div class="empty-state">No videos yet. Paste a YouTube or Vimeo URL to get started.</div>'; return; } routine.videos.forEach(video=>{ const embed=extractEmbed(video.url); const card=document.createElement('article'); card.className='video-card'; card.innerHTML=`${embed?`<iframe class="video-frame" src="${embed}" title="${esc(video.title)}" allowfullscreen></iframe>`:'<div class="video-frame" style="display:grid;place-items:center;color:white;background:#222">Invalid URL</div>'}<div class="video-info"><strong>${esc(video.title)}</strong><div class="muted">${esc(video.url)}</div><button class="delete-btn" data-delete-video="${video.id}">Remove</button></div>`; videoList.appendChild(card); }); videoList.querySelectorAll('[data-delete-video]').forEach(btn=>btn.addEventListener('click',e=>{ routine.videos=routine.videos.filter(v=>v.id!==e.target.dataset.deleteVideo); renderVideos(); renderStats(); queueSave(); })); }
 function renderGrid(){ const formationGrid=$('formationGrid'); formationGrid.innerHTML=''; for(let i=1;i<=9;i++){ const s=document.createElement('span'); s.dataset.col=i; formationGrid.appendChild(s);} }
-function renderMapList(){ const routine=getRoutine(), mapList=$('mapList'); mapList.innerHTML=''; if(!routine){ mapList.innerHTML='<div class="empty-state">Create a routine first.</div>'; return; } routine.maps.forEach(map=>{ const btn=document.createElement('button'); btn.className='map-item'+(map.id===state.activeMapId?' active':''); btn.innerHTML=`<strong>${esc(map.name)}</strong><div class="routine-meta">${map.markers.length} markers</div>`; btn.addEventListener('click',()=>{ state.activeMapId=map.id; state.selectedMarkerId=null; renderMaps(); }); mapList.appendChild(btn); }); }
-function clearDeleteBubble(){ $('formationStage').querySelectorAll('.marker-delete').forEach(el=>el.remove()); }
-function addMarkerInteractions(node, marker, map){ let dragged=false; node.addEventListener('pointerdown',e=>{ e.stopPropagation(); dragged=false; node.setPointerCapture(e.pointerId); const sr=$('formationStage').getBoundingClientRect(); const nr=node.getBoundingClientRect(); const ox=e.clientX-nr.left, oy=e.clientY-nr.top; const move=ev=>{ const dx=Math.abs(ev.clientX-e.clientX), dy=Math.abs(ev.clientY-e.clientY); if(dx>4||dy>4) dragged=true; if(!dragged) return; clearDeleteBubble(); const x=clamp(((ev.clientX-sr.left-ox+nr.width/2)/sr.width)*100,2,98); const y=clamp(((ev.clientY-sr.top-oy+nr.height/2)/sr.height)*100,3,97); marker.x=x; marker.y=y; node.style.left=`calc(${x}% - 16px)`; node.style.top=`calc(${y}% - 16px)`; }; const up=ev=>{ node.releasePointerCapture(ev.pointerId); node.removeEventListener('pointermove',move); node.removeEventListener('pointerup',up); if(!dragged){ state.selectedMarkerId = state.selectedMarkerId===marker.id ? null : marker.id; renderMaps(); } else { queueSave(); renderMaps(); } }; node.addEventListener('pointermove',move); node.addEventListener('pointerup',up); }); }
+function renderMapList(){ const routine=getRoutine(), mapList=$('mapList'); mapList.innerHTML=''; if(!routine){ mapList.innerHTML='<div class="empty-state">Create a routine first.</div>'; return; } routine.maps.forEach(map=>{ const btn=document.createElement('button'); btn.className='map-item'+(map.id===state.activeMapId?' active':''); btn.innerHTML=`<strong>${esc(map.name)}</strong><div class="routine-meta">${map.markers.length} markers</div>`; btn.addEventListener('click',()=>{ state.activeMapId=map.id; state.selectedMarkerId=null; renderMaps(); queueSave(); }); mapList.appendChild(btn); }); }
+function addMarkerInteractions(node, marker, map){ let dragged=false; node.addEventListener('pointerdown',e=>{ e.stopPropagation(); dragged=false; node.setPointerCapture(e.pointerId); const sr=$('formationStage').getBoundingClientRect(); const nr=node.getBoundingClientRect(); const ox=e.clientX-nr.left, oy=e.clientY-nr.top; const move=ev=>{ const dx=Math.abs(ev.clientX-e.clientX), dy=Math.abs(ev.clientY-e.clientY); if(dx>4||dy>4) dragged=true; if(!dragged) return; const x=clamp(((ev.clientX-sr.left-ox+nr.width/2)/sr.width)*100,2,98); const y=clamp(((ev.clientY-sr.top-oy+nr.height/2)/sr.height)*100,3,97); marker.x=x; marker.y=y; node.style.left=`calc(${x}% - 16px)`; node.style.top=`calc(${y}% - 16px)`; }; const up=ev=>{ node.releasePointerCapture(ev.pointerId); node.removeEventListener('pointermove',move); node.removeEventListener('pointerup',up); if(!dragged){ state.selectedMarkerId = state.selectedMarkerId===marker.id ? null : marker.id; renderMaps(); } else { queueSave(); renderMaps(); } }; node.addEventListener('pointermove',move); node.addEventListener('pointerup',up); }); }
 function renderMaps(){ renderGrid(); renderMapList(); const formationStage=$('formationStage'); formationStage.querySelectorAll('.marker,.marker-delete').forEach(el=>el.remove()); const map=getMap(); if(!map) return; map.markers.forEach(marker=>{ const node=document.createElement('div'); node.className='marker'+(marker.id===state.selectedMarkerId?' selected':''); node.textContent=marker.number; node.style.left=`calc(${marker.x}% - 16px)`; node.style.top=`calc(${marker.y}% - 16px)`; if(marker.id===state.selectedMarkerId){ const del=document.createElement('button'); del.className='marker-delete'; del.textContent='✕'; del.style.left=`calc(${marker.x}% + 4px)`; del.style.top=`calc(${marker.y}% - 38px)`; del.addEventListener('pointerdown',e=>e.stopPropagation()); del.addEventListener('click',e=>{ e.stopPropagation(); map.markers=map.markers.filter(m=>m.id!==marker.id); map.markers.forEach((m,i)=>m.number=i+1); state.selectedMarkerId=null; renderMaps(); queueSave(); }); formationStage.appendChild(del); } addMarkerInteractions(node,marker,map); formationStage.appendChild(node); }); }
 function render(){ const routine=getRoutine(); renderSidebar(); renderStats(); renderNavTabs(); if(routine){ $('routineHeading').textContent=routine.name; $('routineSubheading').textContent=`${routine.sheets.length} sheet${routine.sheets.length!==1?'s':''} · ${routine.videos.length} video${routine.videos.length!==1?'s':''} · ${routine.maps.length} map${routine.maps.length!==1?'s':''}`; } else { $('routineHeading').textContent='Select a routine'; $('routineSubheading').textContent='Choose or create a routine on the left.'; } renderSheets(); renderVideos(); renderMaps(); }
-
-$('signUpBtn').addEventListener('click', async ()=>{ clearAuthMessage(); const email=$('emailInput').value.trim(), password=$('passwordInput').value.trim(); if(!email||!password) return authMessage('Enter email and password.'); const { error } = await supabase.auth.signUp({ email, password }); if(error) return authMessage(error.message); authMessage('Account created. Check your email if confirmation is required, then sign in.', true); });
-$('signInBtn').addEventListener('click', async ()=>{ clearAuthMessage(); const email=$('emailInput').value.trim(), password=$('passwordInput').value.trim(); if(!email||!password) return authMessage('Enter email and password.'); const { data, error } = await supabase.auth.signInWithPassword({ email, password }); if(error) return authMessage(error.message); state.user = data.user; showApp(); await loadWorkspace(); });
-$('signOutBtn').addEventListener('click', async ()=>{ await supabase.auth.signOut(); state.user=null; state.routines=[]; showAuth(); });
 $('addRoutineBtn').addEventListener('click',()=>{ const name=$('routineNameInput').value.trim(); if(!name) return alert('Enter a routine name.'); const r=createRoutine(name); state.routines.push(r); state.activeRoutineId=r.id; state.activeSheetId=r.sheets[0].id; state.activeMapId=r.maps[0].id; $('routineNameInput').value=''; render(); queueSave(); });
 navTabs().forEach(t=>t.addEventListener('click',()=>{ state.activeTab=t.dataset.tab; renderNavTabs(); }));
 $('addSheetBtn').addEventListener('click',()=>{ const r=getRoutine(); if(!r) return alert('Create a routine first.'); const s=createSheet(`Sheet ${r.sheets.length+1}`); r.sheets.push(s); state.activeSheetId=s.id; render(); queueSave(); });
@@ -270,8 +230,7 @@ $('deleteMapBtn').addEventListener('click',()=>{ const routine=getRoutine(); if(
 $('formationStage').addEventListener('pointerdown',e=>{ if(e.target===$('formationStage')||e.target.closest('.formation-grid')) state.selectedMarkerId=null; });
 $('formationStage').addEventListener('click',e=>{ const map=getMap(); if(!map||e.target.closest('.marker')||e.target.closest('.marker-delete')) return; const rect=$('formationStage').getBoundingClientRect(); map.markers.push({id:uid(), number:map.markers.length+1, x:clamp(((e.clientX-rect.left)/rect.width)*100,2,98), y:clamp(((e.clientY-rect.top)/rect.height)*100,3,97)}); state.selectedMarkerId=null; renderMaps(); queueSave(); });
 $('exportPdfBtn').addEventListener('click', async()=>{ const routine=getRoutine(); if(!routine||!routine.sheets.length) return alert('No sheets to export.'); const exportRoot=$('exportRoot'); exportRoot.innerHTML=''; const chunks=[]; for(let i=0;i<routine.sheets.length;i+=2) chunks.push(routine.sheets.slice(i,i+2)); chunks.forEach(chunk=>{ const page=document.createElement('div'); page.className='export-page'; chunk.forEach(sheet=>{ const el=document.createElement('div'); el.className='export-sheet'; el.innerHTML=`<h3>${esc(routine.name)} · ${esc(sheet.name)}</h3><div class="export-stack">${sheet.counts.map(c=>`<div class="export-row"><div class="export-badge">${c.index}</div><div style="font-size:13px;">${esc(c.note||'\u00a0')}</div></div>`).join('')}</div>`; page.appendChild(el); }); if(chunk.length===1){ const blank=document.createElement('div'); blank.className='export-sheet'; blank.innerHTML='<h3>&nbsp;</h3>'; page.appendChild(blank); } exportRoot.appendChild(page); }); const { jsPDF } = window.jspdf; const pdf = new jsPDF({ orientation:'landscape', unit:'in', format:'letter' }); const pages=Array.from(exportRoot.children); for(let i=0;i<pages.length;i++){ const canvas = await html2canvas(pages[i], { scale:2, backgroundColor:'#ffffff' }); if(i>0) pdf.addPage(); pdf.addImage(canvas.toDataURL('image/png'),'PNG',0.25,0.25,10.5,8); } pdf.save(`${routine.name.replace(/\s+/g,'_')}-count-sheets.pdf`); });
-
-(async function boot(){ const { data } = await supabase.auth.getSession(); if(data.session?.user){ state.user=data.session.user; showApp(); await loadWorkspace(); } else { showAuth(); } supabase.auth.onAuthStateChange(async (_event, session)=>{ if(session?.user){ state.user=session.user; showApp(); await loadWorkspace(); } }); })();
+loadWorkspace();
 </script>
 </body>
 </html>
